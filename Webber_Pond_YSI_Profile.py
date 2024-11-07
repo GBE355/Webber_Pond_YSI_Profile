@@ -119,6 +119,7 @@ print(f"{file_count} files created in {input_dir}")
 
 # Initialize the Dash app
 app = dash.Dash(__name__)
+server = app.server  # Expose the underlying Flask server if needed by Render
 app.title = "Water Quality Map with Profile Plots"
 
 # Define available parameters for the dropdown
