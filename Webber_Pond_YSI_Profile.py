@@ -64,7 +64,6 @@ for file_name in os.listdir(raw_dir):
 print(f"Loaded {file_count} files")
 print(master_df.head(5))
 
-default_token_if_missing = "pk.eyJ1IjoidGx1bmRlbGwxIiwiYSI6ImNtMzdtbGxsZTBoODgya3E1MHBoOW1nNDQifQ.Tr8xqo6GLRDANXmg-pwmwg"
 mapbox_token = os.getenv("MAPBOX_TOKEN", "default_token_if_missing")
 
 # Function to calculate distance between two latitude/longitude points in meters
