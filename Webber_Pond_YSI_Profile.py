@@ -1,52 +1,32 @@
 # Data manipulation and analysis
-import pandas as pd  # Used for data manipulation and analysis
-import numpy as np  # Used for numerical computations and array manipulations
-
-# Visualization libraries
-import matplotlib.pyplot as plt  # Used for plotting static graphs
-import seaborn as sns  # Enhances Matplotlib with more statistical plots
-import plotly.express as px  # Used for creating interactive plots with Plotly Express
-import plotly.graph_objs as go  # Provides fine-grained control over Plotly graphs
-
-# Date and time handling
-import datetime  # Used for date and time manipulations
-from calendar import month_name as mn  # Used to get month names from month numbers
-import matplotlib.dates as mdates  # Date-related plotting utilities in Matplotlib
-from matplotlib.dates import DateFormatter  # Formats dates on Matplotlib plots
-
-# Geospatial tools
-from geopy.distance import geodesic  # Used to calculate distances between geospatial coordinates
-
-# Data export and input/output
-import os  # Used for operating system interactions, such as file and directory management
-import glob  # Used to retrieve files matching a specified pattern
-
-# Warnings and inline plotting
-import warnings  # Used to handle warnings
-warnings.filterwarnings('ignore')  # Suppresses warning messages
+import pandas as pd  # For data manipulation and reading CSV files
+import numpy as np  # For numerical computations
 
 # Dash for interactive web applications
-import dash  # Used to create web applications with Python
-from dash import dcc, html  # Provides core components and HTML components for Dash apps
-from dash.dependencies import Input, Output  # Used to link components in Dash apps with callback functions
+import dash  # To create web applications with Python
+from dash import dcc, html  # Core components and HTML for Dash apps
+from dash.dependencies import Input, Output  # Links components with callback functions
 
-# Plotly and interactive data visualizations in Dash
-import plotly.express as px  # For quick and easy interactive plots
+# Plotly for data visualizations
+import plotly.express as px  # For creating interactive plots with Plotly Express
 import plotly.graph_objs as go  # For more detailed control over Plotly figures
 
-# Regular expressions
-import re  # Used for pattern matching in strings
+# Geospatial calculations
+from geopy.distance import geodesic  # To calculate distances between coordinates
 
-# Base64 encoding for embedding images
-from io import BytesIO  # Used for in-memory byte streams (e.g., for images)
-import base64  # Used for encoding binary data (e.g., images) as base64 strings
+# Data export and input/output
+import os  # For file and directory operations
+import re  # For pattern matching in strings
 
-raw_dir = r"C:\YSI Temp\Webber Pond\Raw"  # Raw .csv files should be stored here
-input_dir = os.path.join(raw_dir, 'YSI Geo Split')  # Where to read the geo grouped files
-output_dir = r"C:\YSI Temp\Webber Pond\Output"  # Master directory of compiled files
-plots_dir = os.path.join(output_dir, 'Plots')
-geo_dir = os.path.join(output_dir, 'Geo')
-tables_dir = os.path.join(output_dir, 'Tables')
+# Define directory paths within the current working directory (assumed to be "Webber_Pond_YSI_Profile")
+base_dir = os.getcwd()  # This will be the "Webber_Pond_YSI_Profile" directory
+
+raw_dir = os.path.join(base_dir, "Webber Pond", "Raw")  # Raw .csv files should be stored here
+input_dir = os.path.join(raw_dir, "YSI Geo Split")  # Where to read the geo grouped files
+output_dir = os.path.join(base_dir, "Webber Pond", "Output")  # Master directory of compiled files
+plots_dir = os.path.join(output_dir, "Plots")  # Directory specifically for profile plots
+geo_dir = os.path.join(output_dir, "Geo") # ****Unused**** intended for KML or other GIS Outputs
+tables_dir = os.path.join(output_dir, "Tables") #****Unused**** intended for data tables
 
 # Automatically collect all variables ending with '_dir' into a list
 directories = [value for name, value in globals().items() if name.endswith('_dir')]
@@ -84,7 +64,8 @@ for file_name in os.listdir(raw_dir):
 print(f"Loaded {file_count} files")
 print(master_df.head(5))
 
-mapbox_token = "pk.eyJ1IjoiZG9uY2FybG9zIiwiYSI6ImNraXliMnk5aDNtcTgycHAzNjFlODd5N3EifQ.FgYMucBPzxo79iYOvttr1Q"
+default_token_if_missing = "pk.eyJ1IjoidGx1bmRlbGwxIiwiYSI6ImNtMzdtbGxsZTBoODgya3E1MHBoOW1nNDQifQ.Tr8xqo6GLRDANXmg-pwmwg"
+mapbox_token = os.getenv("MAPBOX_TOKEN", "default_token_if_missing")
 
 # Function to calculate distance between two latitude/longitude points in meters
 def distance_in_meters(lat1, lon1, lat2, lon2):
@@ -140,9 +121,6 @@ print(f"{file_count} files created in {input_dir}")
 # Initialize the Dash app
 app = dash.Dash(__name__)
 app.title = "Water Quality Map with Profile Plots"
-
-# Directory where CSV files are stored
-input_dir = r"C:\YSI Temp\Webber Pond\Raw\YSI Geo Split"
 
 # Define available parameters for the dropdown
 parameters = ["Chl ug/L", "PC ug/L", "°C", "DO mg/L", "pH", "ORP mV"]
