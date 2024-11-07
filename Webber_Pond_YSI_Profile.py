@@ -64,7 +64,7 @@ for file_name in os.listdir(raw_dir):
 print(f"Loaded {file_count} files")
 print(master_df.head(5))
 
-mapbox_token = os.getenv("MAPBOX_TOKEN")
+mapbox_token = os.getenv("MAPBOX_TOKEN", "default_token_if_missing")
 
 # Function to calculate distance between two latitude/longitude points in meters
 def distance_in_meters(lat1, lon1, lat2, lon2):
@@ -259,5 +259,13 @@ def update_profile_plot(clickData, selected_parameter):
 
 # Run the app
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8050))
-    app.run_server(debug=True, host="0.0.0.0", port=port)
+    # Verify that the app and server are defined
+    print("Starting the Dash app...")  # Logs that the app is starting
+    print(f"App defined: {'Yes' if app else 'No'}")  # Checks if 'app' is defined
+    
+    # Verify the port being used
+    port = int(os.getenv("PORT", 8050))
+    print(f"Running on port: {port}")  # Logs the port to be used
+
+    # Run the server
+    app.run_server(debug=True, port=port)
