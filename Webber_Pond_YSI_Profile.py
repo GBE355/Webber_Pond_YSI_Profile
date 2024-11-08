@@ -128,7 +128,12 @@ parameters = ["Chl ug/L", "PC ug/L", "°C", "DO mg/L", "pH", "ORP mV"]
 # Regular expression pattern to extract latitude and longitude from filename
 filename_pattern = re.compile(r"(?P<lat>-?\d+\.\d+)Lat_(?P<lon>-?\d+\.\d+)Lon\.csv")
 
-# Load and process all files
+# Verify the content of each grouped DataFrame after file creation
+for i, df in enumerate(geo_grouped_dfs, start=1):
+    print(f"\nGrouped DataFrame {i}:")
+    print(df.head())  # Display the first few rows of each grouped DataFrame
+
+# Existing code to load and process files into site_data
 site_data = []
 for file_name in os.listdir(input_dir):
     if file_name.endswith('.csv'):
@@ -139,11 +144,13 @@ for file_name in os.listdir(input_dir):
             file_path = os.path.join(input_dir, file_name)
             df = pd.read_csv(file_path)
 
+            # Display the first few rows of each DataFrame as it is loaded
+            print(f"\nLoading data for {file_name}:")
+            print(df.head())
+
             # Store data for each site in a list with latitude, longitude, and file path
             site_data.append({"Latitude": lat, "Longitude": lon, "FilePath": file_path})
 
-# Sort the sites by latitude (south to north)
-site_data = sorted(site_data, key=lambda x: x["Latitude"])
 
 # Add sequential labels to each site
 for i, site in enumerate(site_data, start=1):
