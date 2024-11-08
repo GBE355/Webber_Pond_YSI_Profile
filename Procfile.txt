@@ -1,1 +1,1 @@
-web: gunicorn Webber_Pond_YSI_Profile:app
+web: gunicorn Webber_Pond_YSI_Profile:server
